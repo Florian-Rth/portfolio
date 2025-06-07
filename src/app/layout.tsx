@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
+import { Inter } from 'next/font/google';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: "FlorianRth-Portfolio",
@@ -15,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="de">
-      <body>
+      <body className={inter.className}>
         <AppRouterCacheProvider>
         {children}
         </AppRouterCacheProvider>
