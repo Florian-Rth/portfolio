@@ -1,88 +1,67 @@
-'use client';
+"use client";
+import React, { forwardRef } from "react";
+import {
+  createTheme,
+  CssBaseline,
+  ThemeProvider,
+} from "@mui/material";
+import NextLink from "next/link";
+import { LinkProps as NextLinkProps } from "next/link";
+import { Inter } from "next/font/google";
 
-import * as React from 'react';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { Inter } from 'next/font/google';
+const inter = Inter({ subsets: ["latin"] });
 
-const inter = Inter({ subsets: ['latin'] });
+const ThemeContext = React.createContext(null);
 
-export const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
+interface LinkBehaviourProps extends NextLinkProps {
+  ref?: React.Ref<HTMLAnchorElement>;
+}
 
-export default function ThemeRegistry({ children }: { children: React.ReactNode }) {
-  const [mode, setMode] = React.useState<'light' | 'dark'>('light');
+// https://stackoverflow.com/questions/66226576/using-the-material-ui-link-component-with-the-next-js-link-component/74419666#74419666
+const LinkBehaviour = forwardRef<
+  HTMLAnchorElement,
+  LinkBehaviourProps
+>(function LinkBehaviour(props, ref) {
+  return <NextLink ref={ref} {...props} />;
+});
 
-  React.useEffect(() => {
-    const storedMode = localStorage.getItem('themeMode') as 'light' | 'dark' | null;
-    const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (storedMode) {
-      setMode(storedMode);
-    } else if (prefersDarkMode) {
-      setMode('dark');
-    }
-    // Ensure this effect runs only once on mount
-  }, []);
-
-  const colorMode = React.useMemo(
-    () => ({
-      toggleColorMode: () => {
-        setMode((prevMode) => {
-          const newMode = prevMode === 'light' ? 'dark' : 'light';
-          localStorage.setItem('themeMode', newMode);
-          return newMode;
-        });
+const ThemeRegistry: React.FC<{
+  children: React.ReactNode;
+}> = (props) => {
+  const theme = createTheme({
+    cssVariables: {
+      colorSchemeSelector: "class",
+      disableCssColorScheme: true,
+    },
+    colorSchemes: {
+      light: true,
+      dark: true,
+    },
+    typography: {
+      fontFamily: inter.style.fontFamily,
+    },
+    components: {
+      MuiLink: {
+        defaultProps: {
+          component: LinkBehaviour,
+        },
       },
-    }),
-    [],
-  );
-
-  const theme = React.useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode,
-          ...(mode === 'light'
-            ? {
-                // palette values for light mode
-                primary: { main: '#1976d2' }, 
-                secondary: { main: '#dc004e' }, 
-                background: {
-                  default: '#ffffff',
-                  paper: '#f5f5f5',
-                },
-              }
-            : {
-                // palette values for dark mode
-                primary: { main: '#90caf9' }, 
-                secondary: { main: '#f48fb1' }, 
-                background: {
-                  default: '#121212',
-                  paper: '#1e1e1e',
-                },
-              }),
+      MuiButtonBase: {
+        defaultProps: {
+          LinkComponent: LinkBehaviour,
         },
-        typography: {
-          fontFamily: inter.style.fontFamily,
-        },
-        components: {
-          MuiAppBar: {
-            styleOverrides: {
-              colorPrimary: {
-                backgroundColor: mode === 'light' ? '#1976d2' : '#1e1e1e',
-              },
-            },
-          },
-        },
-      }),
-    [mode],
-  );
+      },
+    },
+  });
 
   return (
-    <ColorModeContext.Provider value={colorMode}>
+    <ThemeContext.Provider value={null}>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
-        {children}
+        <CssBaseline enableColorScheme />
+        {props.children}
       </ThemeProvider>
-    </ColorModeContext.Provider>
+    </ThemeContext.Provider>
   );
-}
+};
+
+export default ThemeRegistry;
