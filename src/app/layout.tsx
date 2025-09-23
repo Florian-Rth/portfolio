@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import ThemeRegistry from "../components/ThemeRegistry";
-import { InitColorSchemeScript, Toolbar } from "@mui/material";
+import {
+  Container,
+  InitColorSchemeScript,
+  Toolbar,
+} from "@mui/material";
 import AppBar from "@/components/AppBar";
 
 export const metadata: Metadata = {
@@ -21,10 +25,19 @@ export default function RootLayout({
       <body>
         <AppRouterCacheProvider>
           <ThemeRegistry>
-            <AppBar />
-            <Toolbar sx={{ position: "relative" }} />
-            <InitColorSchemeScript attribute="class" />
-            {children}
+            <Container
+              maxWidth="xl"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                height: "100vh",
+              }}
+            >
+              <AppBar />
+              <Toolbar sx={{ position: "relative" }} />
+              <InitColorSchemeScript attribute="class" />
+              {children}
+            </Container>
           </ThemeRegistry>
         </AppRouterCacheProvider>
       </body>

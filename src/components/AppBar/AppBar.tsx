@@ -7,9 +7,11 @@ import {
   Toolbar,
   Link,
   Button,
+  useColorScheme,
 } from "@mui/material";
 
 const AppBar: FC = () => {
+  const { mode, setMode } = useColorScheme();
   return (
     <MuiAppBar>
       <Toolbar>
@@ -55,7 +57,15 @@ const AppBar: FC = () => {
           </Stack>
 
           <Stack justifyContent="center">
-            <Button variant="contained">Test</Button>
+            <Button
+              variant="outlined"
+              onClick={() =>
+                mode === "dark" ? setMode("light") : setMode("dark")
+              }
+              sx={{ m: 1 }}
+            >
+              Toggle Dark Mode
+            </Button>
           </Stack>
         </Stack>
       </Toolbar>
