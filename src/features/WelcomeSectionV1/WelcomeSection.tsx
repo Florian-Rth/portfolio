@@ -125,7 +125,7 @@ const WelcomeSection = () => {
                 },
               }}
             >
-              Florian Roth
+              Florian Rätsch
             </Typography>
 
             {/* Typewriter Effekt für Rolle */}
