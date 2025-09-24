@@ -1,7 +1,6 @@
 "use client";
 import {
   Grid,
-  Stack,
   Typography,
   Box,
   Chip,
@@ -9,37 +8,26 @@ import {
   Button,
   IconButton,
 } from "@mui/material";
-import {
-  motion,
-  useMotionValue,
-  useTransform,
-  useSpring,
-  Variants,
-} from "framer-motion";
-import { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import { useState } from "react";
 import {
   Download,
   GitHub,
   LinkedIn,
   Mail,
 } from "@mui/icons-material";
+import {
+  containerVariants,
+  floatingVariants,
+  itemVariants,
+  titleVariants,
+} from "./utils/motion-variants";
+import WelcomeSectionContainer from "./WelcomeSectionContainer";
+import GridItemContainer from "./GridItemContainer";
 
 const WelcomeSection = () => {
   const { mode } = useColorScheme() || { mode: "light" };
   const [isHovering, setIsHovering] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  // Framer Motion values for cursor tracking
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  // Smooth spring animations for cursor tracking
-  const springX = useSpring(mouseX, { damping: 25, stiffness: 700 });
-  const springY = useSpring(mouseY, { damping: 25, stiffness: 700 });
-
-  // Transform values for parallax effects
-  const rotateX = useTransform(springY, [-300, 300], [5, -5]);
-  const rotateY = useTransform(springX, [-300, 300], [-5, 5]);
 
   const skills = [
     "React",
@@ -59,100 +47,11 @@ const WelcomeSection = () => {
     { icon: Mail, href: "#", label: "Email" },
   ];
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        mouseX.set(x);
-        mouseY.set(y);
-      }
-    };
-
-    document.addEventListener("mousemove", handleMouseMove);
-    return () =>
-      document.removeEventListener("mousemove", handleMouseMove);
-  }, [mouseX, mouseY]);
-
-  // Animation variants
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        delayChildren: 0.2,
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants: Variants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring" as const,
-        damping: 20,
-        stiffness: 300,
-      },
-    },
-  };
-
-  const titleVariants: Variants = {
-    hidden: { scale: 0.8, opacity: 0 },
-    visible: {
-      scale: 1,
-      opacity: 1,
-      transition: {
-        type: "spring" as const,
-        damping: 15,
-        stiffness: 200,
-        delay: 0.3,
-      },
-    },
-  };
-
-  const floatingVariants: Variants = {
-    initial: { y: 0, rotate: 0 },
-    animate: {
-      y: [-10, 10, -10],
-      rotate: [-1, 1, -1],
-      transition: {
-        duration: 6,
-        repeat: Infinity,
-        repeatType: "reverse" as const,
-        ease: "easeInOut" as const,
-      },
-    },
-  };
-
   return (
-    <motion.div
-      ref={containerRef}
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-      style={{ height: "100%" }}
-    >
-      <Stack
-        justifyContent="center"
-        alignItems="center"
-        height="100%"
-        py={4}
-      >
-        <Grid container spacing={4} alignItems="center">
-          <Grid
-            size={{ xs: 12, lg: 6 }}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              minHeight: { xs: "auto", lg: "70vh" },
-              px: { xs: 2, sm: 4, lg: 6 },
-            }}
-          >
+    <WelcomeSectionContainer>
+      <Grid container spacing={4}>
+        <Grid size={{ xs: 12, lg: 6 }}>
+          <GridItemContainer>
             <motion.div variants={containerVariants}>
               {/* Greeting */}
               <motion.div variants={itemVariants}>
@@ -167,6 +66,7 @@ const WelcomeSection = () => {
                     gap: 1,
                   }}
                 >
+                  Hallo
                   <motion.span
                     animate={{
                       rotate: [0, 14, -8, 14, -4, 10, 0],
@@ -180,7 +80,7 @@ const WelcomeSection = () => {
                   >
                     👋
                   </motion.span>
-                  Hallo, ich bin
+                  ich bin
                 </Typography>
               </motion.div>
 
@@ -427,20 +327,12 @@ const WelcomeSection = () => {
                 </Box>
               </motion.div>
             </motion.div>
-          </Grid>
+          </GridItemContainer>
+        </Grid>
 
-          {/* Right Side - 3D Model Placeholder */}
-          <Grid
-            size={{ xs: 12, lg: 6 }}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              minHeight: { xs: "400px", lg: "70vh" },
-              position: "relative",
-            }}
-          >
+        {/* Right Side - 3D Model Placeholder */}
+        <Grid size={{ xs: 12, lg: 6 }}>
+          <GridItemContainer>
             <motion.div
               variants={floatingVariants}
               initial="initial"
@@ -455,10 +347,6 @@ const WelcomeSection = () => {
               }}
             >
               <motion.div
-                style={{
-                  rotateX,
-                  rotateY,
-                }}
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => setIsHovering(false)}
               >
@@ -536,10 +424,10 @@ const WelcomeSection = () => {
                 </motion.div>
               </motion.div>
             </motion.div>
-          </Grid>
+          </GridItemContainer>
         </Grid>
-      </Stack>
-    </motion.div>
+      </Grid>
+    </WelcomeSectionContainer>
   );
 };
 
