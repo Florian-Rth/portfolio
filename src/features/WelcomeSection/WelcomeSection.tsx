@@ -100,11 +100,9 @@ const WelcomeSection = () => {
                       mode === "dark"
                         ? "linear-gradient(45deg, #667eea 0%, #764ba2 50%, #f093fb 100%)"
                         : "linear-gradient(45deg, #4facfe 0%, #00f2fe 50%, #43e97b 100%)",
-                    backgroundSize: "200% 200%",
                     backgroundClip: "text",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
-                    lineHeight: 1.1,
                   }}
                 >
                   Florian Rätsch
@@ -114,35 +112,32 @@ const WelcomeSection = () => {
               {/* Role with typewriter effect */}
               <motion.div variants={itemVariants}>
                 <Box
-                  sx={{ height: "80px", overflow: "hidden", mb: 3 }}
+                  component={motion.div}
+                  initial={{ width: 0 }}
+                  animate={{ width: "fit-content" }}
+                  transition={{ duration: 1.5, delay: 1.2 }}
+                  sx={{
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    mb: 6,
+                  }}
                 >
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: "auto" }}
-                    transition={{ duration: 1.5, delay: 1.2 }}
-                    style={{
-                      overflow: "hidden",
-                      whiteSpace: "nowrap",
+                  <Typography
+                    variant="h3"
+                    sx={{
+                      fontSize: {
+                        xs: "1.5rem",
+                        sm: "2rem",
+                        lg: "2.5rem",
+                      },
+                      fontWeight: 600,
+                      borderRight: "3px solid",
+                      borderColor: "primary.main",
+                      pr: 1,
                     }}
                   >
-                    <Typography
-                      variant="h3"
-                      sx={{
-                        fontSize: {
-                          xs: "1.5rem",
-                          sm: "2rem",
-                          lg: "2.5rem",
-                        },
-                        fontWeight: 600,
-                        color: "text.primary",
-                        borderRight: "3px solid",
-                        borderColor: "primary.main",
-                        pr: 1,
-                      }}
-                    >
-                      Full-Stack Developer
-                    </Typography>
-                  </motion.div>
+                    Full-Stack Developer
+                  </Typography>
                 </Box>
               </motion.div>
 
